@@ -39,13 +39,13 @@ func serveIgnores(dir string) {
 		if strings.HasSuffix(f.Name(), ".gitignore") {
 			prefix := strings.TrimSuffix(f.Name(), ".gitignore")
 			spath := strings.ToLower(prefix)
+			route := fmt.Sprintf("/%s", spath)
 
 			ignores = append(ignores, Ignore{
 				prefix,
-				fmt.Sprintf("/%s", spath),
+				route,
 			})
 
-			route := fmt.Sprintf("/%s", spath)
 			s := path.Join(dir, f.Name())
 			http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 				serveIgnore(w, r, s)

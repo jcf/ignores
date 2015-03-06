@@ -19,10 +19,6 @@ func fatalError(msg string) {
 	os.Exit(1)
 }
 
-func prepareIgnorePath(s string) string {
-	return strings.ToLower(strings.TrimSuffix(s, ".gitignore"))
-}
-
 func serveIgnore(w http.ResponseWriter, r *http.Request, s string) {
 	log.Printf("Serving gitignore %s", s)
 	http.ServeFile(w, r, s)
@@ -41,12 +37,14 @@ func serveIgnores(dir string) {
 
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), ".gitignore") {
+			prefix := strings.TrimSuffix(f.Name(), ".gitignore")
+			spath := strings.ToLower(prefix)
+
 			ignores = append(ignores, Ignore{
-				strings.TrimSuffix(f.Name(), ".gitignore"),
-				fmt.Sprintf("/%s", prepareIgnorePath(f.Name())),
+				prefix,
+				fmt.Sprintf("/%s", spath),
 			})
 
-			spath := prepareIgnorePath(f.Name())
 			route := fmt.Sprintf("/%s", spath)
 			s := path.Join(dir, f.Name())
 			http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {

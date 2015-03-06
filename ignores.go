@@ -37,16 +37,15 @@ func serveIgnores(dir string) {
 
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), ".gitignore") {
-			prefix := strings.TrimSuffix(f.Name(), ".gitignore")
-			spath := strings.ToLower(prefix)
-			route := fmt.Sprintf("/%s", spath)
+			lang := strings.TrimSuffix(f.Name(), ".gitignore")
+			route := fmt.Sprintf("/%s", strings.ToLower(lang))
+			s := path.Join(dir, f.Name())
 
 			ignores = append(ignores, Ignore{
-				prefix,
+				lang,
 				route,
 			})
 
-			s := path.Join(dir, f.Name())
 			http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 				serveIgnore(w, r, s)
 			})

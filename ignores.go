@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 )
 
@@ -65,6 +66,8 @@ func serveIgnores(dir string) {
 }
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+
 	if len(os.Args) != 2 {
 		fatalError(usage)
 	}

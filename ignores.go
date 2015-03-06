@@ -13,6 +13,11 @@ import (
 
 var usage = "Usage: ignores <path>\n"
 
+type Ignore struct {
+	Lang string `json:"lang"`
+	Ref  string `json:"$ref"`
+}
+
 func fatalError(msg string) {
 	fmt.Fprintf(os.Stderr, msg)
 	fmt.Print(usage)
@@ -22,11 +27,6 @@ func fatalError(msg string) {
 func serveIgnore(w http.ResponseWriter, r *http.Request, s string) {
 	log.Printf("Serving gitignore %s", s)
 	http.ServeFile(w, r, s)
-}
-
-type Ignore struct {
-	Lang string `json:"lang"`
-	Ref  string `json:"$ref"`
 }
 
 func serveIgnores(dir string) {
